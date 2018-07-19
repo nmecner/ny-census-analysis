@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-
+from matplotlib.ticker import FormatStrFormatter
 import os
 
 
@@ -17,8 +17,7 @@ def load_data():
     d = pd.read_csv(DATA_FILE, usecols=['RAC1P', 'PINCP'])
     # magic
     return d
-#
-# print(load_data())
+
 
 agg = {
     "PINCP": {
@@ -56,11 +55,14 @@ def plot_income_by_race():
     raceg_data = raceg_data.drop(raceg_data.index[[3,4]])
 
     print(raceg_data)
-    # print(new)
-    # print(races_to_plot)
-    #print(raceg_data)
-    # plt.figure();
     raceg_data.plot(kind='bar')
+    plt.legend()
+
+    plt.suptitle("Income by race in 2016 in US Dollars in the state of New York", verticalalignment='center')
+    plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%d $'))
+    plt.xlabel("Race")
+    plt.ylabel("Income in USD")
+
     plt.show()
     # return raceg_data.groupby('RAC1P').count()
 
