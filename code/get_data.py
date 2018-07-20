@@ -1,7 +1,7 @@
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FormatStrFormatter
+import matplotlib.patches as mpatches
 import os
 
 
@@ -9,13 +9,10 @@ import os
 DIR_PATH = os.path.join( os.path.dirname( __file__ ), '..' )
 DATA_FILE = os.path.join(DIR_PATH, "data/data/csv_pus/ss16pny.csv")
 
-# RAC1P - race code
-# PINCP - total income (past 12 months)
 
-
+# RAC1P - race code PINCP - total income (past 12 months)
 def load_data():
     d = pd.read_csv(DATA_FILE, usecols=['RAC1P', 'PINCP'])
-    # magic
     return d
 
 
@@ -35,40 +32,44 @@ race_dict = {
     '6': 'Asian'
 }
 
+def create_boxplot():
+    x = load_data()
 
+    # Get rid of NaNs in data
+    w = x[x['RAC1P'] == 1]['PINCP'].dropna()
+    af = x[x['RAC1P'] == 2]['PINCP'].dropna()
+    nat = x[x['RAC1P'] == 3]['PINCP'].dropna()
+    asi = x[x['RAC1P'] == 6]['PINCP'].dropna()
 
-def get_race(i):
-    i = str(int(i))
-    if i in race_dict:
-        return race_dict[i]
-    else:
-        print(i)
-        pass
+    # Cut out first and last quantile
+    list_races = []
+    for el in [w, af, nat, asi]:
+        q25 = el[el > w.quantile(0.25)]
+        q75 = q25[q25 < w.quantile(0.75)]
+        list_races.append(q75)
 
+    # Create a figure instance
+    fig = plt.figure(1, figsize=(9, 6))
 
-def plot_income_by_race():
-    df = load_data()
-    raceg_data = df.groupby(['RAC1P']).agg(agg)
-    # # choose the columns for 1,2,3,6
-    for i in [1,2,3]:
-        raceg_data = raceg_data.drop(raceg_data.index[-1])
-    raceg_data = raceg_data.drop(raceg_data.index[[3,4]])
+    # Create an axes instance
+    ax = fig.add_subplot(111)
 
-    print(raceg_data)
-    raceg_data.plot(kind='bar')
-    plt.legend()
+    # Create the boxplot
+    bp = ax.boxplot(list_races)
 
-    plt.suptitle("Income by race in 2016 in US Dollars in the state of New York", verticalalignment='center')
+    #create legend
+    red_patch = mpatches.Patch(color='red', label='1 - Whites')
+    blue_patch = mpatches.Patch(color='blue', label='2 - African Americans')
+    green_patch = mpatches.Patch(color='green', label='3 - Native Americans')
+    yellow_patch = mpatches.Patch(color='yellow', label='4 - Asians')
+
+    plt.legend(handles=[red_patch, blue_patch, green_patch, yellow_patch], bbox_to_anchor=(1, 1), loc=1, borderaxespad=0)
+    plt.gcf().subplots_adjust(bottom=0.15)
+    plt.suptitle("Income by race in 2016 in US Dollars in New York state", verticalalignment='center')
     plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%d $'))
-    plt.xlabel("Race")
+    plt.xlabel("Race declared in US Census")
     plt.ylabel("Income in USD")
-
     plt.show()
-    # return raceg_data.groupby('RAC1P').count()
-
-plot_income_by_race()
 
 
-
-# PLOTTING THE DATA
-
+create_boxplot()
