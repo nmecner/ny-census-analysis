@@ -12,11 +12,11 @@ Save it under
 {project directory}/data/data/csv_pus/ss16pny.csv
 
 Install the requirements in venv:
-'''
+```
 pip install -r requirements.txt
-'''
+```
 
 Run the script in the code folder:
-'''
+```
 python get_data.py
-'''
+```
