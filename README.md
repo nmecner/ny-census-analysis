@@ -1,15 +1,16 @@
 # ny-census-analysis
-Repo for the project for the Udacity Data Science Scholarship. It will provide the analysis of the income levels in 2016 of people living in the state of NY and check differences between racial groups.
+Repo for the project for the Udacity Data Science Scholarship. It provides the analysis of the income levels in 2016 of people living in the state of NY and check differences between racial groups.
 
 # How to setup the project
 
 Get the data - NY personal record for 2016 from US Census:
 
-https://factfinder.census.gov/faces/nav/jsf/pages/searchresults.xhtml?refresh=t
+[New York Population CSV](https://www2.census.gov/programs-surveys/acs/data/pums/2016/1-Year/csv_pny.zip)
 
-Save it under
-
+Unzip it under
+```
 {project directory}/data/data/csv_pus/ss16pny.csv
+```
 
 Install the requirements in venv:
 ```
